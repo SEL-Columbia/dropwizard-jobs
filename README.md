@@ -128,11 +128,7 @@ public class OnTestJob extends Job {
 * I hacked this in a few hours in the evening, so rather see it as a prototype.
 * Ask the community whether this is useful. It seems, it makes more sense that you use a DI container like Guice in order to inject daos or other persistence layers into the jobs, as you really want to do store stuff.
 
-# Thanks
-
-* The playframework 1.x for the idea of simple annotations at Job classes
------------------------------------------------------------------------------
-
+# Note
 This jar has third-party jars that require some signature files. So, you might get the following exception:
 
 Exception in thread "main" java.lang.SecurityException: Invalid signature file digest for Manifest main attributes.
@@ -149,3 +145,9 @@ It can be done by following the steps:
 6) jar cvf ../dropwizard-jobs.jar *
 
 Now, use this dropwizard_jobs_jar. It does not include the files that require signature files. It should work fine.
+
+# Thanks
+
+* The playframework 1.x for the idea of simple annotations at Job classes
+
+
