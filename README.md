@@ -131,3 +131,21 @@ public class OnTestJob extends Job {
 # Thanks
 
 * The playframework 1.x for the idea of simple annotations at Job classes
+-----------------------------------------------------------------------------
+
+This jar has third-party jars that require some signature files. So, you might get the following exception:
+
+Exception in thread "main" java.lang.SecurityException: Invalid signature file digest for Manifest main attributes.
+
+A simple approach is to simply unzip everything into a temporary location, remove/modify the unwanted bits, then zip everything back up.
+
+It can be done by following the steps:
+
+1) Go to the path, classes/artifacts/dropwizard_jobs_jar
+2) mkdir temp
+3) cd temp
+4) jar -xvf ../dropwizard-jobs.jar
+5) rm META-INF/ECLIPSE*
+6) jar cvf ../dropwizard-jobs.jar *
+
+Now, use this dropwizard_jobs_jar. It does not include the files that require signature files. It should work fine.
