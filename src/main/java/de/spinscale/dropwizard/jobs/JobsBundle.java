@@ -1,27 +1,20 @@
 package de.spinscale.dropwizard.jobs;
 
-import com.yammer.dropwizard.Bundle;
+import com.yammer.dropwizard.ConfiguredBundle;
 import com.yammer.dropwizard.config.Bootstrap;
+import com.yammer.dropwizard.config.Configuration;
 import com.yammer.dropwizard.config.Environment;
+import de.spinscale.dropwizard.jobs.config.ConfigurationStrategy;
+import de.spinscale.dropwizard.jobs.config.JobConfiguration;
 
-public class JobsBundle implements Bundle {
-
-	private String scanURL = null;
-	
+public abstract class JobsBundle<T extends Configuration> implements ConfiguredBundle<T>, ConfigurationStrategy<T> {
     @Override
     public void initialize(Bootstrap<?> bootstrap) {
     }
-    
-    public JobsBundle() {
-    }
-    
-    public JobsBundle(String scanURL) {
-    	this.scanURL = scanURL;
-    }
 
     @Override
-    public void run(Environment environment) {
-    	environment.manage(new JobManager(scanURL));
+    public void run(T configuration, Environment environment) {
+        JobConfiguration jobsConfiguration = getJobConfiguration(configuration);
+        environment.manage(new JobManager(jobsConfiguration.getScanUrl(), jobsConfiguration.getDefaultEveryScanInterval()));
     }
-
 }

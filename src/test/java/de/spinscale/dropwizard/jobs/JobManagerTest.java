@@ -8,7 +8,7 @@ import static org.hamcrest.Matchers.hasSize;
 
 public class JobManagerTest {
 
-    JobManager jobManager = new JobManager();
+    JobManager jobManager = new JobManager("", "1s");
 
     @Test
     public void jobsOnStartupShouldBeExecuted() throws Exception {
@@ -38,5 +38,14 @@ public class JobManagerTest {
         jobManager.start();
         Thread.sleep(5000);
         assertThat(EveryTestJob.results, hasSize(greaterThan(5)));
+    }
+
+    @Test
+    public void jobsWithEveryAnnotationWithDefaultTimeShouldBeExecuted() throws Exception {
+        JobManager defaultJobManager = new JobManager("", "2s");
+        DefaultEveryTestJob.results.clear();
+        defaultJobManager.start();
+        Thread.sleep(5000);
+        assertThat(DefaultEveryTestJob.results, hasSize(greaterThan(2)));
     }
 }

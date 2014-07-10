@@ -46,12 +46,27 @@ public MyService() {
 ### Dropwizard 0.6.0-SNAPSHOT
 
 Because I am using dropwizard 0.6.0-SNAPSHOT in my current project, this is how it is integrated there
+#### This will no longer work:
 
 ```java
 @Override
 public void initialize(Bootstrap<DelaSearchConfiguration> bootstrap) {
   bootstrap.setName("myService");
   bootstrap.addBundle(new JobsBundle());
+}
+```
+
+#### New way of configuring bundle is:
+
+```java
+public void initialize(Bootstrap<YourConfiguration> bootstrap) {
+    bootstrap.setName("myService");
+    bootstrap.addBundle(new JobsBundle<YourConfiguration>() {
+        @Override
+        public JobConfiguration getJobConfiguration(YourConfiguration configuration) {
+            return configuration.getJobConfiguration();
+        }
+    });
 }
 ```
 
@@ -127,6 +142,13 @@ public class OnTestJob extends Job {
 
 * I hacked this in a few hours in the evening, so rather see it as a prototype.
 * Ask the community whether this is useful. It seems, it makes more sense that you use a DI container like Guice in order to inject daos or other persistence layers into the jobs, as you really want to do store stuff.
+
+# Dev Note
+
+* To create jar with all the dependencies locally run:
+`mvn clean compile package`
+
+* This will create jar in `target/`
 
 # Note
 This jar has third-party jars that require some signature files. So, you might get the following exception:

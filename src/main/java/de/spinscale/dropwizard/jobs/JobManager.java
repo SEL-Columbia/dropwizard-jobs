@@ -22,13 +22,11 @@ public class JobManager implements Managed {
     private static final Logger log = LoggerFactory.getLogger(JobManager.class);
     private Reflections reflections = null;
     protected Scheduler scheduler;
+    private String defaultScanInterval;
 
-    public JobManager() {
-        this("");
-    }
-    
-    public JobManager(String scanUrl) {
-    	reflections = new Reflections(scanUrl);
+    public JobManager(String scanUrl, String defaultScanInterval) {
+        this.defaultScanInterval = defaultScanInterval;
+        reflections = new Reflections(scanUrl);
     }
     
     @Override
@@ -87,7 +85,11 @@ public class JobManager implements Managed {
 
         for (Class<? extends org.quartz.Job> clazz : everyJobClasses) {
             Every annotation = clazz.getAnnotation(Every.class);
-            int secondDelay = TimeParserUtil.parseDuration(annotation.value());
+            String duration = annotation.value();
+            if("default".equalsIgnoreCase(duration)) {
+                duration = defaultScanInterval;
+            }
+            int secondDelay = TimeParserUtil.parseDuration(duration);
             SimpleScheduleBuilder scheduleBuilder = SimpleScheduleBuilder.simpleSchedule().withIntervalInSeconds(secondDelay).repeatForever();
             Trigger trigger = TriggerBuilder.newTrigger().withSchedule(scheduleBuilder).build();
 
